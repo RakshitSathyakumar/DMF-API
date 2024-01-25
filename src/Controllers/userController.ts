@@ -45,7 +45,7 @@ export const getAllUsers = TryCatch(
     const users = await User.find({});
     return res.status(200).json({
       success: true,
-      message: users,
+      users,
     });
   }
 );
@@ -59,7 +59,7 @@ export const getUser = TryCatch(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-    message: user,
+    user,
   });
 });
 

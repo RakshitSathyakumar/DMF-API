@@ -9,7 +9,7 @@ interface Icoupon {
   amount: Number;
 }
 
-// 
+//
 export const createPaymentIntent = TryCatch(async (req, res, next) => {
   const { amount } = req.body;
 
@@ -18,6 +18,17 @@ export const createPaymentIntent = TryCatch(async (req, res, next) => {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: Number(amount) * 100,
     currency: "inr",
+    description: "Dunder Miffilin Payment",
+    shipping: {
+      name: "Random singh",
+      address: {
+        line1: "510 Dunder Miffilin",
+        postal_code: "98140",
+        city: "San Francisco",
+        state: "CA",
+        country: "US",
+      },
+    },
   });
 
   return res.status(201).json({
@@ -26,7 +37,7 @@ export const createPaymentIntent = TryCatch(async (req, res, next) => {
   });
 });
 
-// 
+//
 export const newCoupon = TryCatch(
   async (req: Request<{}, {}, Icoupon>, res, next) => {
     const { coupon, amount } = req.body;
@@ -44,7 +55,7 @@ export const newCoupon = TryCatch(
     });
   }
 );
-// 
+//
 export const applyDiscount = TryCatch(async (req, res, next) => {
   const { coupon } = req.query;
 
@@ -54,21 +65,22 @@ export const applyDiscount = TryCatch(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: `Congratualtions!! You have received a discount of Rs${discount.amount}`,
+    discount: discount.amount,
   });
 });
-// 
+//
 export const getAllCouponCode = TryCatch(async (req, res, next) => {
-  const allCouponCode = await Coupon.find({});
+  const coupons = await Coupon.find({});
   return res.status(200).json({
     success: true,
-    message: allCouponCode,
+    coupons,
   });
 });
-// 
+//
 export const deleteCoupon = TryCatch(async (req, res, next) => {
   const { id } = req.params;
   const coupon = await Coupon.findByIdAndDelete(id);
-  if(!coupon) return next(new ErrorHandler("Coupon doesn't exisit",400));
+  if (!coupon) return next(new ErrorHandler("Coupon doesn't exisit", 400));
 
   return res.status(200).json({
     success: true,

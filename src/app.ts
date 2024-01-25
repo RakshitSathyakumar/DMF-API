@@ -12,6 +12,7 @@ import { errorMiddleware } from "./Middleware/error.js";
 import { config } from "dotenv";
 import morgan from "morgan";
 import Stripe from "stripe";
+import cors from "cors";
 
 config({
   path: "./.env",
@@ -28,6 +29,7 @@ export const myCache = new NodeCache();
 app.use(express.json());
 
 app.use(morgan("dev"));
+app.use(cors());
 
 // Routes
 app.use("/api/v1/user", useRoute);
