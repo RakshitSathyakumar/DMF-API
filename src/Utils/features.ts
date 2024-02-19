@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Document }  from "mongoose";
 import { InvalidateCacheProps, OrderItemType } from "../Types/types.js";
 import { myCache } from "../app.js";
 import { Product } from "../Models/product.js";
@@ -100,10 +100,11 @@ interface MyDocument extends Document {
 }
 type FuncProps = {
   length: number;
-  today: Date;
   docArr: MyDocument[];
+  today: Date;
   property?: "discount" | "total";
 };
+
 
 export const getChartData = ({
   length,
