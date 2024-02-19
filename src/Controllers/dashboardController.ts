@@ -193,11 +193,10 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
     stats = {
       changePercent,
       count,
-      categories,
       chart,
       categoryCount,
       userRatio,
-      modifiedLatestTransaction,
+      latestTransaction:modifiedLatestTransaction,
     };
 
     myCache.set(key, JSON.stringify(stats));
@@ -356,7 +355,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
       twelveMonthOrdersPromise,
     ]);
 
-    console.log(products);
+    // console.log(products);
     const productCounts = getChartData({ length: 6, today, docArr: products });
     const usersCounts = getChartData({ length: 6, today, docArr: users });
     const ordersCounts = getChartData({ length: 12, today, docArr: orders });
