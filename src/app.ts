@@ -1,7 +1,5 @@
 import express from "express";
-
 import NodeCache from "node-cache";
-
 import useRoute from "./Routes/userRoute.js";
 import productRoute from "./Routes/productRoute.js";
 import orderRoute from "./Routes/orderRoute.js";

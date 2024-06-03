@@ -3,7 +3,6 @@ import { deleteUser, getAllUsers, getUser, newUser } from "../Controllers/userCo
 import { adminOnly } from "../Middleware/auth.js";
 const app=express.Router();
 
-
 // api/v1/user/new
 app.post('/new',newUser);
 // api/v1/user/all

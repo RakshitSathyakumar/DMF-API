@@ -5,17 +5,18 @@ import { NewOrderRequestBody } from "../Types/types.js";
 import { invalidateCache, reductStock } from "../Utils/features.js";
 import ErrorHandler from "../Utils/utility-class.js";
 import { myCache } from "../app.js";
-import { User } from "../Models/user.js";
 
 export const myOrders = TryCatch(async (req, res, next) => {
-  // const { id: user } = req.query;
-  const user = req.query.id;
+  const { id: user } = req.query;
+
+  const key = `my-orders-${user}`;
+
   let orders = [];
-  if (myCache.has(`my-orders-${user}`))
-    orders = JSON.parse(myCache.get(`my-orders-${user}`) as string);
+
+  if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
   else {
     orders = await Order.find({ user });
-    myCache.set(`my-orders-${user}`, JSON.stringify(orders));
+    myCache.set(key, JSON.stringify(orders));
   }
 
   return res.status(200).json({
