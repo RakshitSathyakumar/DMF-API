@@ -11,6 +11,7 @@ interface IUser extends Document {
   dob: Date;
   createdAt: Date;
   updatedAt: Date;
+  //   Virtual Attribute
   age: number;
 }
 
@@ -32,7 +33,6 @@ const schema = new mongoose.Schema(
     },
     photo: {
       type: String,
-      //   default: "",
       required: [true, "Please add Photo"],
     },
     role: {
@@ -42,8 +42,8 @@ const schema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ["Male", "Female"],
-      required: [true, "Required *"],
+      enum: ["male", "female"],
+      required: [true, "Please enter Gender"],
     },
     dob: {
       type: Date,

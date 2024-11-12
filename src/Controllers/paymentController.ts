@@ -55,6 +55,20 @@ export const newCoupon = TryCatch(
     });
   }
 );
+
+export const couponDetail = TryCatch(async (req, res, next) => {
+  const { id } = req.params;
+
+  const coupon = await Coupon.findById(id);
+
+  if (!coupon) return next(new ErrorHandler("Invalid Code!", 400));
+
+  res.status(200).json({
+    success: true,
+    coupon
+  });
+});
+
 //
 export const applyDiscount = TryCatch(async (req, res, next) => {
   const { coupon } = req.query;
@@ -64,8 +78,7 @@ export const applyDiscount = TryCatch(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: `Congratualtions!! You have received a discount of Rs${discount.amount}`,
-    discount: discount.amount,
+    discount:discount.amount,
   });
 });
 //
@@ -85,5 +98,23 @@ export const deleteCoupon = TryCatch(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: `The Coupon is deleted successfully!`,
+  });
+});
+
+export const updateCoupon = TryCatch(async (req, res, next) => {
+  const { id } = req.params;
+  const checkCoupon = await Coupon.findById(id);
+  if (!checkCoupon) return next(new ErrorHandler("Coupon doesn't exisit", 400));
+
+  const {amount,coupon} = req.body;
+
+  if(amount) checkCoupon.amount = amount;
+  if(coupon) checkCoupon.coupon = coupon;
+
+  await checkCoupon.save();
+
+  return res.status(200).json({
+    success: true,
+    message: `The Coupon is updated successfully!`,
   });
 });

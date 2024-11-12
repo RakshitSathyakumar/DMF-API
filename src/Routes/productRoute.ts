@@ -1,23 +1,26 @@
 import express from "express";
 import {
+  allReview,
   deleteProduct,
+  deleteReview,
   getAdminProducts,
   getAllCategories,
   getAllProducts,
   getLatestProducts,
   getSingleProduct,
   newProduct,
+  newReview,
   updateProduct,
 } from "../Controllers/productController.js";
-import { singleUpload } from "../Middleware/multer.js";
+import { mutliUpload } from "../Middleware/multer.js";
 import { adminOnly } from "../Middleware/auth.js";
 const app = express.Router();
 
-app.post("/new", singleUpload, newProduct);
+app.post("/new", mutliUpload, newProduct);
 
-app.get('/all',getAllProducts);
+app.get("/all", getAllProducts);
 
-app.get('/categories',getAllCategories);
+app.get("/categories", getAllCategories);
 
 app.get("/latest", getLatestProducts);
 
@@ -27,6 +30,10 @@ app
   .route("/:id")
   .get(getSingleProduct)
   .delete(adminOnly, deleteProduct)
-  .put(singleUpload, updateProduct);
+  .put(adminOnly, mutliUpload, updateProduct);
+
+  app.get("/reviews/:id", allReview);
+  app.post("/review/new/:id", newReview);
+  app.delete("/review/:id", deleteReview);
 
 export default app;

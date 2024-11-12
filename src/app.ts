@@ -1,16 +1,16 @@
 import express from "express";
-import NodeCache from "node-cache";
 import useRoute from "./Routes/userRoute.js";
 import productRoute from "./Routes/productRoute.js";
 import orderRoute from "./Routes/orderRoute.js";
 import paymentRoute from "./Routes/paymentRoute.js";
 import dashboardRoute from "./Routes/dashboardRoute.js";
-import { connectDB } from "./Utils/features.js";
+import { connectDB, connectRedis } from "./Utils/features.js";
 import { errorMiddleware } from "./Middleware/error.js";
 import { config } from "dotenv";
 import morgan from "morgan";
 import Stripe from "stripe";
 import cors from "cors";
+import { v2 as cloudinary } from "cloudinary";
 
 config({
   path: "./.env",
@@ -19,15 +19,25 @@ config({
 const port = process.env.PORT || 4000;
 const uri = process.env.MONGO_URI || "";
 const stripeKey = process.env.STRIPE_KEY || "";
+const redisuri = process.env.REDIS_URI || "";
+export const redisTTL = process.env.redisTTL ||  60 * 60 * 4;
 
 connectDB(uri);
+export const redis = connectRedis(redisuri);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+
 export const stripe = new Stripe(stripeKey);
 const app = express();
-export const myCache = new NodeCache();
+app.use(cors());
 app.use(express.json());
 
 app.use(morgan("dev"));
-app.use(cors());
 
 // Routes
 app.use("/api/v1/user", useRoute);
